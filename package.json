@@ -1,0 +1,38 @@
+{
+  "name": "solanapick",
+  "version": "0.1.0",
+  "description": "A Solana payment SDK combining Solana Pay and web3.js logic for easy money requests.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "solana",
+    "pay",
+    "web3",
+    "sdk",
+    "payment"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@solana/web3.js": "^1.98.2",
+    "bignumber.js": "^9.3.1",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.1",
+    "jest": "^29.7.0",
+    "zod": "^3.22.4"
+  }
+}
