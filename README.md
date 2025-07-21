@@ -1,12 +1,12 @@
 ![SolanaPick Banner](./public/solana-pick-banner.jpg)
 
-# SolanaPick SDK & Payment Server
+# Solana-Pick SDK & Payment Server
 
 [![npm version](https://img.shields.io/npm/v/solanapick?style=flat-square)](https://www.npmjs.com/package/solana-pick)
 [![CI](https://github.com/David-patrick-chuks/SolanaPick/actions/workflows/ci.yml/badge.svg)](https://github.com/David-patrick-chuks/SolanaPick/actions)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](./LICENSE)
 
-A professional, open source TypeScript SDK and backend for Solana payments. Combines SolanaPick and web3.js logic for easy money requests, QR generation, and transaction verification. Includes a modern hosted payment page and modular backend.
+A professional, open source TypeScript SDK and backend for Solana payments. Combines SolanaPay and web3.js logic for easy money requests, QR generation, and transaction verification. Includes a modern hosted payment page and modular backend.
 
 ---
 

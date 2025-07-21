@@ -19,7 +19,6 @@ export function generateSolanaPickUrl({
   memo?: string;
 }): string {
   const params = new URLSearchParams({
-    recipient,
     amount: amount.toString(),
     reference,
   });
@@ -27,7 +26,7 @@ export function generateSolanaPickUrl({
   if (message) params.append('message', message);
   if (memo) params.append('memo', memo);
   const query = params.toString().replace(/\+/g, '%20');
-  return `pick:${recipient}?${query}`;
+  return `solana:${recipient}?${query}`;
 }
 
 export function generateHostedPickUrl({
