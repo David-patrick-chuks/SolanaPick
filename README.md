@@ -6,7 +6,7 @@
 [![CI](https://github.com/David-patrick-chuks/SolanaPick/actions/workflows/ci.yml/badge.svg)](https://github.com/David-patrick-chuks/SolanaPick/actions)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](./LICENSE)
 
-A professional, open source TypeScript SDK and backend for Solana payments. Combines SolanaPay and web3.js logic for easy money requests, QR generation, and transaction verification. Includes a modern hosted payment page and modular backend.
+A open source TypeScript SDK for Solana payments. Provides easy money requests, QR generation, transaction verification, a modern hosted payment page, and a modular backend(webhook).
 
 ---
 
