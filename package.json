@@ -24,12 +24,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/SolanaPick.git"
+    "url": "https://github.com/David-patrick-chuks/SolanaPick.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/SolanaPick/issues"
+    "url": "https://github.com/David-patrick-chuks/SolanaPick/issues"
   },
-  "homepage": "https://github.com/yourusername/SolanaPick#readme",
+  "homepage": "https://github.com/David-patrick-chuks/SolanaPick#readme",
   "keywords": [
     "solana",
     "pay",
@@ -40,7 +40,7 @@
     "typescript",
     "open source"
   ],
-  "author": "Your Name <your@email.com>",
+  "author": "David-patrick-chuks <davidchuksdev@gmail.com>",
   "license": "MIT",
   "engines": {
     "node": ">=16"

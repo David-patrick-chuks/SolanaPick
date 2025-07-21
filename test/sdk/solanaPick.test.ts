@@ -22,7 +22,6 @@ describe('SolanaPick SDK', () => {
   it('generates a valid hosted pick URL', () => {
     const reference = generateReference();
     const url = generateHostedPickUrl({
-      baseUrl: 'https://pick.example.com/pick',
       recipient: '11111111111111111111111111111111',
       amount: 0.01,
       reference,
@@ -30,7 +29,7 @@ describe('SolanaPick SDK', () => {
       message: 'Test Payment',
       memo: 'Test Memo',
     });
-    expect(url).toContain('https://pick.example.com/pick?');
+    expect(url).toContain('http://localhost:3000/pick?'); // or use process.env.HOSTED_PICK_BASE_URL if set
     expect(url).toContain('recipient=11111111111111111111111111111111');
     expect(url).toContain('amount=0.01');
     expect(url).toContain('reference=' + reference);
