@@ -6,72 +6,117 @@
 
 A professional, open source TypeScript SDK and backend for Solana payments. Combines SolanaPick and web3.js logic for easy money requests, QR generation, and transaction verification. Includes a modern hosted payment page and modular backend.
 
-## Features
+---
 
-- Generate SolanaPick URLs
-- Create payment QR codes
-- Serialize Solana transactions for wallets
-- Verify payment completion on-chain
-- Hosted payment page (like Paystack/Flutterwave)
-- Modular, testable backend
-- MongoDB storage with auto-expiry
-- Rate limiting, logging, and robust error handling
-- Professional code quality and open source standards
+## 🚀 Quick Start (for New Web3 Devs)
 
-## Installation (SDK)
+1. **Install the SDK:**
+   ```bash
+   npm install solanapick
+   ```
+2. **Import and use the SDK:**
+   ```ts
+   import {
+     generateSolanaPickUrl,
+     generateHostedPickUrl,
+     generateQrCode,
+     generateSerializedTransaction,
+     verifyTransaction,
+     generateReference,
+   } from 'solanapick';
+   
+   // Generate a unique reference for each payment
+   const reference = generateReference();
+   
+   // Your recipient address (Solana public key)
+   const recipient = '...';
+   const amount = 0.005;
+   const label = 'My Store';
+   const message = 'Payment for goods';
+   const memo = 'Thank you!';
+   
+   // Generate a SolanaPick URL
+   const url = generateSolanaPickUrl({ recipient, amount, reference, label, message, memo });
+   
+   // Generate a QR code for the URL
+   const qr = await generateQrCode(url);
+   
+   // Generate a hosted payment page URL (uses your backend URL from env)
+   const hostedUrl = generateHostedPickUrl({ recipient, amount, reference, label, message, memo });
+   
+   // Generate a serialized transaction (for wallets)
+   const serializedTx = await generateSerializedTransaction({
+     recipient,
+     amount,
+     payerPublicKey: recipient, // For demo only
+     // connectionUrl: 'https://api.devnet.solana.com' // Optional, defaults to mainnet-beta
+   });
+   
+   // Verify a payment on-chain
+   const verified = await verifyTransaction({
+     reference,
+     recipient,
+     amount,
+     // connectionUrl: 'https://api.devnet.solana.com' // Optional, defaults to mainnet-beta
+   });
+   ```
 
-```bash
-npm install solanapick
-```
+---
 
-## Usage (SDK)
+## 📦 SDK Function Reference & Options
 
-```ts
-import {
-  generateSolanaPickUrl,
-  generateHostedPickUrl,
-  generateQrCode,
-  generateSerializedTransaction,
-  verifyTransaction,
-} from 'solanapick';
+### `generateReference()`
+- **Returns:** A new, unique Solana public key (string) to use as a reference for tracking payments.
+- **Usage:**
+  ```ts
+  const reference = generateReference();
+  ```
 
-const url = generateSolanaPickUrl({
-  recipient: '...',
-  amount: 0.005,
-  reference: '...',
-  label: 'Open Source Store',
-  message: 'Payment for Open Source Service',
-  memo: 'Thank you!',
-});
+### `generateSolanaPickUrl({ recipient, amount, reference, label?, message?, memo? })`
+- **recipient**: The Solana address (public key) to receive the payment. *(string, required)*
+- **amount**: The amount of SOL to request. *(number or string, required)*
+- **reference**: A unique reference for this payment (use `generateReference()`). *(string, required)*
+- **label**: (optional) A label for the payment (e.g., store name).
+- **message**: (optional) A message for the payer.
+- **memo**: (optional) A memo for the transaction.
 
-const qr = await generateQrCode(url);
+### `generateHostedPickUrl({ recipient, amount, reference, label?, message?, memo? })`
+- **Uses your backend's hosted payment page URL.**
+- **Base URL is set via the `HOSTED_PICK_BASE_URL` environment variable.**
+  - Defaults to `http://localhost:3000/pick` if not set.
+- **All options are the same as `generateSolanaPickUrl` (except no `baseUrl` parameter).**
 
-const hostedUrl = generateHostedPickUrl({
-  baseUrl: 'https://pick.solanapick.com/pick',
-  recipient: '...',
-  amount: 0.005,
-  reference: '...',
-  label: 'Open Source Store',
-  message: 'Payment for Open Source Service',
-  memo: 'Thank you!',
-});
+### `generateQrCode(url)`
+- **url**: Any SolanaPick or hosted payment URL. *(string, required)*
+- **Returns:** A base64 PNG data URL for use in web/mobile apps.
 
-const serializedTx = await generateSerializedTransaction({
-  recipient: '...',
-  amount: 0.005,
-  payerPublicKey: '...',
-  // connectionUrl: 'https://api.mainnet-beta.solana.com' // Optional, defaults to mainnet-beta
-});
+### `generateSerializedTransaction({ recipient, amount, payerPublicKey, connectionUrl? })`
+- **recipient**: The Solana address to receive the payment. *(string, required)*
+- **amount**: Amount of SOL. *(number or string, required)*
+- **payerPublicKey**: The public key of the payer (who will sign the transaction). *(string, required)*
+- **connectionUrl**: (optional) Solana RPC endpoint. Defaults to mainnet-beta.
+- **Returns:** A base64-encoded unsigned transaction.
 
-const verified = await verifyTransaction({
-  reference: '...',
-  recipient: '...',
-  amount: 0.005,
-  // connectionUrl: 'https://api.mainnet-beta.solana.com' // Optional, defaults to mainnet-beta
-});
-```
+### `verifyTransaction({ reference, recipient, amount, connectionUrl? })`
+- **reference**: The unique reference for the payment. *(string, required)*
+- **recipient**: The Solana address that should have received the payment. *(string, required)*
+- **amount**: Amount of SOL. *(number or string, required)*
+- **connectionUrl**: (optional) Solana RPC endpoint. Defaults to mainnet-beta.
+- **Returns:** Transaction info if found, or `null` if not found.
 
-> **Note:** For most use cases, you do not need to specify `connectionUrl`. It defaults to Solana mainnet-beta. For devnet/testnet or custom RPC, pass `connectionUrl` as an option.
+---
+
+## 🗝️ Glossary
+
+| Option     | What is it?                | Example Value                                      | Purpose                                  |
+|------------|---------------------------|----------------------------------------------------|------------------------------------------|
+| recipient  | Solana address to receive | 2hQYiwpBvy2DmgCwzcs6nx7rGGzetjETEGGaRaUVh4mG       | Who gets the payment                     |
+| reference  | Unique tag (public key)   | 3n4uQw1k2v9y8z7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2h1g   | Track/verify this specific payment       |
+| label      | Payment label             | My Store                                          | Displayed to the payer                   |
+| message    | Payment message           | Payment for goods                                 | Displayed to the payer                   |
+| memo       | Transaction memo          | Thank you!                                        | On-chain memo for the payment            |
+
+---
 
 ## Project Structure
 
@@ -97,6 +142,8 @@ SolanaPick/
 ├── CONTRIBUTING.md
 └── CODE_OF_CONDUCT.md
 ```
+
+---
 
 ## Contributing
 
