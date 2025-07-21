@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const src_1 = require("../../src");
-describe('SolanaPick SDK', () => {
-    it('generates a valid SolanaPick URL', () => {
+describe('Solana-Pick SDK', () => {
+    it('generates a valid Solana-Pick URL', () => {
         const url = (0, src_1.generateSolanaPickUrl)({
             recipient: '11111111111111111111111111111111',
             amount: 0.01,

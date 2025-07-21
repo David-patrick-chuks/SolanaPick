@@ -1,7 +1,9 @@
+![SolanaPick Banner](./solana-pick-banner.jpg)
+
 # SolanaPick SDK & Payment Server
 
-[![npm version](https://img.shields.io/npm/v/solanapick?style=flat-square)](https://www.npmjs.com/package/solanapick)
-[![CI](https://github.com/yourusername/SolanaPick/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/SolanaPick/actions)
+[![npm version](https://img.shields.io/npm/v/solanapick?style=flat-square)](https://www.npmjs.com/package/solana-pick)
+[![CI](https://github.com/David-patrick-chuks/SolanaPick/actions/workflows/ci.yml/badge.svg)](https://github.com/David-patrick-chuks/SolanaPick/actions)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](./LICENSE)
 
 A professional, open source TypeScript SDK and backend for Solana payments. Combines SolanaPick and web3.js logic for easy money requests, QR generation, and transaction verification. Includes a modern hosted payment page and modular backend.
@@ -12,7 +14,7 @@ A professional, open source TypeScript SDK and backend for Solana payments. Comb
 
 1. **Install the SDK:**
    ```bash
-   npm install solanapick
+   npm install solana-pick
    ```
 2. **Import and use the SDK:**
    ```ts
@@ -23,7 +25,7 @@ A professional, open source TypeScript SDK and backend for Solana payments. Comb
      generateSerializedTransaction,
      verifyTransaction,
      generateReference,
-   } from 'solanapick';
+   } from 'solana-pick';
    
    // Generate a unique reference for each payment
    const reference = generateReference();

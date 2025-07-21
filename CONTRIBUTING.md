@@ -1,6 +1,6 @@
-# Contributing to SolanaPick
+# Contributing to Solana-Pick
 
-Thank you for your interest in contributing to SolanaPick! We welcome contributions from the community to make this project better for everyone.
+Thank you for your interest in contributing to Solana-Pick! We welcome contributions from the community to make this project better for everyone.
 
 ## Getting Started
 

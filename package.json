@@ -1,5 +1,5 @@
 {
-  "name": "solanapick",
+  "name": "solana-pick",
   "version": "1.0.0",
   "description": "A professional TypeScript SDK and backend for Solana payments, with hosted payment page and modular backend.",
   "main": "dist/index.js",

@@ -1,7 +1,7 @@
 import { generateHostedPickUrl, generateReference, generateSolanaPickUrl } from '../../src';
 
-describe('SolanaPick SDK', () => {
-  it('generates a valid SolanaPick URL', () => {
+describe('Solana-Pick SDK', () => {
+  it('generates a valid Solana-Pick URL', () => {
     const reference = generateReference();
     const url = generateSolanaPickUrl({
       recipient: '11111111111111111111111111111111',

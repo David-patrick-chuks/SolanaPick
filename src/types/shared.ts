@@ -2,7 +2,7 @@ import { PublicKey } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 
 /**
- * Options for generating a SolanaPick URL.
+ * Options for generating a Solana-Pick URL.
  */
 export interface SolanaPickUrlOptions {
   recipient: PublicKey | string;
