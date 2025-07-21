@@ -2,8 +2,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/test/**/*.test.ts'],
+  testMatch: ['**/test/server/**/*.test.ts'],
   moduleFileExtensions: ['ts', 'js', 'json'],
-  collectCoverage: true,
-  coverageDirectory: 'coverage',
+  collectCoverage: false,
 };

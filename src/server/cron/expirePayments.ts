@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import { PaymentRequest } from '../models/PaymentRequest';
 
 // Run every 10 minutes
-export function startCron() {
+export function startCron(): void {
   cron.schedule('*/10 * * * *', async () => {
     const now = new Date();
     // TTL index will auto-delete, but as a backup, remove any unpaid/expired
@@ -14,4 +14,4 @@ export function startCron() {
       console.log(`Cron: Deleted ${expired.deletedCount} expired payment requests.`);
     }
   });
-} 
+}

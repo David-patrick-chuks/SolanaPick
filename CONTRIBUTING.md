@@ -21,12 +21,14 @@ Thank you for your interest in contributing to SolanaPick! We welcome contributi
    ```
 
 ## Coding Standards
+
 - Use TypeScript and follow the existing code style.
 - Run `npm run lint` and `npm run format` before submitting a PR.
 - Write JSDoc comments for all public functions.
 - Add or update tests for any new features or bug fixes.
 
 ## Pull Request Process
+
 1. Fork and create your feature branch (`git checkout -b feature/my-feature`).
 2. Commit your changes with clear messages.
 3. Push to your fork and open a Pull Request against the `main` branch.
@@ -34,4 +36,5 @@ Thank you for your interest in contributing to SolanaPick! We welcome contributi
 5. Provide a clear description of your changes.
 
 ## Contact
-For questions or support, open an issue or contact the maintainers. 
+
+For questions or support, open an issue or contact the maintainers.

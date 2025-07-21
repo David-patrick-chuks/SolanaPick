@@ -1,12 +1,9 @@
 import { Document, Schema, model } from 'mongoose';
+import { SolanaPickUrlOptions } from '../../types/shared';
 
-export interface IPaymentRequest extends Document {
+// IPaymentRequest extends SolanaPickUrlOptions with backend-specific fields
+export interface IPaymentRequest extends SolanaPickUrlOptions, Document {
   reference: string;
-  recipient: string;
-  amount: string;
-  label?: string;
-  message?: string;
-  memo?: string;
   createdAt: Date;
   paid: boolean;
   paidAt?: Date;
@@ -24,4 +21,4 @@ const PaymentRequestSchema = new Schema<IPaymentRequest>({
   paidAt: Date,
 });
 
-export const PaymentRequest = model<IPaymentRequest>('PaymentRequest', PaymentRequestSchema); 
+export const PaymentRequest = model<IPaymentRequest>('PaymentRequest', PaymentRequestSchema);

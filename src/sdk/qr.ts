@@ -14,4 +14,4 @@ export async function generateQrCode(url: string): Promise<string> {
       light: '#FFFFFF',
     },
   });
-} 
+}

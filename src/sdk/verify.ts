@@ -1,15 +1,25 @@
-import { Connection, LAMPORTS_PER_SOL, ParsedInstruction, PublicKey, SystemProgram } from '@solana/web3.js';
+import {
+  Connection,
+  LAMPORTS_PER_SOL,
+  ParsedInstruction,
+  PublicKey,
+  SystemProgram,
+} from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import { VerifyTransactionOptions } from '../types/shared';
+
+const DEFAULT_CONNECTION_URL = 'https://api.mainnet-beta.solana.com';
 
 /**
  * Verify if a payment transaction has been completed on-chain.
  * @param options - VerifyTransactionOptions
  * @returns Promise<{ signature: string, confirmed: boolean } | null>
  */
-export async function verifyTransaction(options: VerifyTransactionOptions): Promise<{ signature: string, confirmed: boolean } | null> {
+export async function verifyTransaction(
+  options: VerifyTransactionOptions,
+): Promise<{ signature: string; confirmed: boolean } | null> {
   const { reference, recipient, amount, connectionUrl } = options;
-  const connection = new Connection(connectionUrl, 'confirmed');
+  const connection = new Connection(connectionUrl || DEFAULT_CONNECTION_URL, 'confirmed');
   const referenceKey = typeof reference === 'string' ? new PublicKey(reference) : reference;
   const recipientKey = typeof recipient === 'string' ? new PublicKey(recipient) : recipient;
   const lamports = new BigNumber(amount).times(LAMPORTS_PER_SOL).toNumber();
@@ -18,7 +28,9 @@ export async function verifyTransaction(options: VerifyTransactionOptions): Prom
 
   for (const sigInfo of signatures) {
     const signature = sigInfo.signature;
-    const transaction = await connection.getParsedTransaction(signature, { commitment: 'confirmed' });
+    const transaction = await connection.getParsedTransaction(signature, {
+      commitment: 'confirmed',
+    });
     if (transaction && transaction.transaction.message.instructions) {
       for (const instruction of transaction.transaction.message.instructions) {
         // Only check parsed instructions
@@ -31,7 +43,11 @@ export async function verifyTransaction(options: VerifyTransactionOptions): Prom
             parsed.info.lamports === lamports
           ) {
             // Check for reference in transaction keys
-            if (transaction.transaction.message.accountKeys.some(key => key.pubkey.equals(referenceKey))) {
+            if (
+              transaction.transaction.message.accountKeys.some((key) =>
+                key.pubkey.equals(referenceKey),
+              )
+            ) {
               return { signature, confirmed: true };
             }
           }
@@ -40,4 +56,4 @@ export async function verifyTransaction(options: VerifyTransactionOptions): Prom
     }
   }
   return null;
-} 
+}

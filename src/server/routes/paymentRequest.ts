@@ -1,55 +1,49 @@
-import { Router } from 'express';
 import { Keypair } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
-import { z } from 'zod';
-import { SolanaPayUrlOptions } from '../../types/shared';
+import { Request, Response, Router } from 'express';
 import { PaymentRequest } from '../models/PaymentRequest';
+import { solanaPickUrlOptionsSchema } from '../validation/paymentRequest';
 
 export const paymentRequestRouter = Router();
 
-const PaymentRequestSchema = z.object({
-  recipient: z.string().min(32),
-  amount: z.union([z.string(), z.number()]),
-  label: z.string().optional(),
-  message: z.string().optional(),
-  memo: z.string().optional(),
-});
-
 // POST /api/payment/request
-paymentRequestRouter.post('/', async (req, res) => {
-  const parse = PaymentRequestSchema.safeParse(req.body);
+paymentRequestRouter.post('/', async (req: Request, res: Response) => {
+  const parse = solanaPickUrlOptionsSchema.safeParse(req.body);
   if (!parse.success) {
-    return res.status(400).json({ error: 'Invalid input', details: parse.error.errors });
+    return res.status(400).json({ error: 'Invalid input', details: parse.error.issues });
   }
   const { recipient, amount, label, message, memo } = parse.data;
+  // Always generate a new reference, ignore any provided in body
   const reference = new Keypair().publicKey.toBase58();
   try {
     const paymentRequest = await PaymentRequest.create({
       reference,
       recipient,
-      amount: new BigNumber(amount).toString(),
+      amount: new BigNumber(amount).toString(), // always store as string
       label,
       message,
       memo,
       createdAt: new Date(),
       paid: false,
     });
-    res.status(201).json(paymentRequest);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to create payment request', details: err.message });
+    return res.status(201).json(paymentRequest);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return res.status(500).json({ error: 'Failed to create payment request', details: message });
   }
 });
 
 // GET /api/payment/request/:reference
-paymentRequestRouter.get('/:reference', async (req, res) => {
+paymentRequestRouter.get('/:reference', async (req: Request, res: Response) => {
   const { reference } = req.params;
   try {
     const paymentRequest = await PaymentRequest.findOne({ reference });
     if (!paymentRequest) {
       return res.status(404).json({ error: 'Payment request not found' });
     }
-    res.json(paymentRequest);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch payment request', details: err.message });
+    return res.json(paymentRequest);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return res.status(500).json({ error: 'Failed to fetch payment request', details: message });
   }
-}); 
+});

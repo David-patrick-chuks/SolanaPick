@@ -1,11 +1,12 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 import path from 'path';
 import { startCron } from './cron/expirePayments';
 import { connectDB } from './db/mongoose';
+import { errorHandler } from './middleware/errorHandler';
 import { paymentRequestRouter } from './routes/paymentRequest';
 import { paymentVerifyRouter } from './routes/paymentVerify';
 import { webhookRouter } from './routes/webhook';
@@ -40,13 +41,10 @@ app.get('/pay/:reference', (req: Request, res: Response) => {
   res.sendFile(path.resolve(__dirname, '../../public/pay.html'));
 });
 
-// Error handling middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
-  res.status(500).json({ error: 'Internal Server Error', details: err.message });
-});
+// Centralized error handling middleware
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`SolanaPick backend running on port ${PORT}`);
-}); 
+});

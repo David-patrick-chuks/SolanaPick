@@ -4,10 +4,11 @@
 [![CI](https://github.com/yourusername/SolanaPick/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/SolanaPick/actions)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](./LICENSE)
 
-A professional, open source TypeScript SDK and backend for Solana payments. Combines Solana Pay and web3.js logic for easy money requests, QR generation, and transaction verification. Includes a modern hosted payment page and modular backend.
+A professional, open source TypeScript SDK and backend for Solana payments. Combines SolanaPick and web3.js logic for easy money requests, QR generation, and transaction verification. Includes a modern hosted payment page and modular backend.
 
 ## Features
-- Generate Solana Pay URLs
+
+- Generate SolanaPick URLs
 - Create payment QR codes
 - Serialize Solana transactions for wallets
 - Verify payment completion on-chain
@@ -27,38 +28,50 @@ npm install solanapick
 
 ```ts
 import {
-  generateSolanaPayUrl,
-  generateHostedPaymentUrl,
+  generateSolanaPickUrl,
+  generateHostedPickUrl,
   generateQrCode,
   generateSerializedTransaction,
   verifyTransaction,
 } from 'solanapick';
 
-const url = generateSolanaPayUrl({
+const url = generateSolanaPickUrl({
   recipient: '...',
   amount: 0.005,
   reference: '...',
   label: 'Open Source Store',
   message: 'Payment for Open Source Service',
-  memo: 'Thank you!'
+  memo: 'Thank you!',
 });
 
 const qr = await generateQrCode(url);
+
+const hostedUrl = generateHostedPickUrl({
+  baseUrl: 'https://pick.solanapick.com/pick',
+  recipient: '...',
+  amount: 0.005,
+  reference: '...',
+  label: 'Open Source Store',
+  message: 'Payment for Open Source Service',
+  memo: 'Thank you!',
+});
 
 const serializedTx = await generateSerializedTransaction({
   recipient: '...',
   amount: 0.005,
   payerPublicKey: '...',
-  connectionUrl: 'https://api.mainnet-beta.solana.com'
+  // connectionUrl: 'https://api.mainnet-beta.solana.com' // Optional, defaults to mainnet-beta
 });
 
 const verified = await verifyTransaction({
   reference: '...',
   recipient: '...',
   amount: 0.005,
-  connectionUrl: 'https://api.mainnet-beta.solana.com'
+  // connectionUrl: 'https://api.mainnet-beta.solana.com' // Optional, defaults to mainnet-beta
 });
 ```
+
+> **Note:** For most use cases, you do not need to specify `connectionUrl`. It defaults to Solana mainnet-beta. For devnet/testnet or custom RPC, pass `connectionUrl` as an option.
 
 ## Project Structure
 
@@ -86,7 +99,9 @@ SolanaPick/
 ```
 
 ## Contributing
+
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, coding standards, and PR process.
 
 ## License
-MIT 
+
+MIT

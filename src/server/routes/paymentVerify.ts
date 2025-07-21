@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { verifyTransaction } from '../../sdk/verify';
 import BigNumber from 'bignumber.js';
+import { Request, Response, Router } from 'express';
 import { z } from 'zod';
+import { verifyTransaction } from '../../sdk/verify';
 import { VerifyTransactionOptions } from '../../types/shared';
 
 const quicknodeEndpoint = process.env.QUICKNODE_ENDPOINT || 'https://api.mainnet-beta.solana.com';
@@ -15,10 +15,10 @@ const VerifyQuerySchema = z.object({
 });
 
 // GET /api/payment/verify?reference=...&recipient=...&amount=...
-paymentVerifyRouter.get('/', async (req, res) => {
+paymentVerifyRouter.get('/', async (req: Request, res: Response) => {
   const parse = VerifyQuerySchema.safeParse(req.query);
   if (!parse.success) {
-    return res.status(400).json({ error: 'Invalid input', details: parse.error.errors });
+    return res.status(400).json({ error: 'Invalid input', details: parse.error.issues });
   }
   const { reference, recipient, amount } = parse.data;
   const result = await verifyTransaction({
@@ -28,8 +28,8 @@ paymentVerifyRouter.get('/', async (req, res) => {
     connectionUrl: quicknodeEndpoint,
   } as VerifyTransactionOptions);
   if (result) {
-    res.json({ status: 'verified', signature: result.signature });
+    return res.json({ status: 'verified', signature: result.signature });
   } else {
-    res.json({ status: 'not found' });
+    return res.json({ status: 'not found' });
   }
-}); 
+});
