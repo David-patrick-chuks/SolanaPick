@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 import path from 'path';
+import { startCron } from './cron/expirePayments';
 import { connectDB } from './db/mongoose';
 import { paymentRequestRouter } from './routes/paymentRequest';
 import { paymentVerifyRouter } from './routes/paymentVerify';
@@ -24,6 +25,7 @@ app.use(morgan('dev'));
 app.use(limiter);
 
 connectDB();
+startCron(); // TTL index + cron for reliable expiry
 
 app.use('/api/payment/verify', paymentVerifyRouter);
 app.use('/api/payment/request', paymentRequestRouter);

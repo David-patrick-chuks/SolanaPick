@@ -1,0 +1,16 @@
+# Exclude backend, tests, examples, and configs from npm package
+src/server/
+test/
+examples/
+public/
+.github/
+.env
+.env.*
+.gitignore
+.eslintrc.json
+.prettierrc
+jest.config.js
+tsconfig.json
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+README.md 

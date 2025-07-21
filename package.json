@@ -1,7 +1,7 @@
 {
   "name": "solanapick",
-  "version": "0.1.0",
-  "description": "A Solana payment SDK combining Solana Pay and web3.js logic for easy money requests.",
+  "version": "1.0.0",
+  "description": "A professional TypeScript SDK and backend for Solana payments, with hosted payment page and modular backend.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -11,21 +11,25 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/yourusername/SolanaPick.git"
   },
   "keywords": [
     "solana",
     "pay",
     "web3",
     "sdk",
-    "payment"
+    "payment",
+    "qr",
+    "typescript",
+    "open source"
   ],
-  "author": "",
+  "author": "Your Name <your@email.com>",
   "license": "MIT",
+  "homepage": "https://github.com/yourusername/SolanaPick#readme",
   "dependencies": {
-    "@solana/web3.js": "^1.98.2",
-    "bignumber.js": "^9.3.1",
-    "qrcode": "^1.5.4"
+    "@solana/web3.js": "^1.92.1",
+    "bignumber.js": "^9.1.2",
+    "qrcode": "^1.5.3"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
