@@ -1,4 +1,4 @@
-![SolanaPick Banner](./solana-pick-banner.jpg)
+![SolanaPick Banner](./public/solana-pick-banner.jpg)
 
 # SolanaPick SDK & Payment Server
 

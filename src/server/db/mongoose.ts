@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/solanapick';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/solana-pick';
 
 export async function connectDB(): Promise<void> {
   if (mongoose.connection.readyState === 0) {
