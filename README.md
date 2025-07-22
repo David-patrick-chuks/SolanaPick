@@ -25,6 +25,7 @@ A open source TypeScript SDK for Solana payments. Provides easy money requests, 
      generateSerializedTransaction,
      verifyTransaction,
      generateReference,
+     withRetry,
    } from 'solana-pick';
    
    // Generate a unique reference for each payment
@@ -55,12 +56,14 @@ A open source TypeScript SDK for Solana payments. Provides easy money requests, 
    });
    
    // Verify a payment on-chain
-   const verified = await verifyTransaction({
+   // Example: Retry verifyTransaction on 429 errors
+   // connectionUrl is optional: defaults to QUICKNODE_URL from your .env, or mainnet-beta
+   const verified = await withRetry(() => verifyTransaction({
      reference,
      recipient,
      amount,
-     // connectionUrl: 'https://api.devnet.solana.com' // Optional, defaults to mainnet-beta
-   });
+     // connectionUrl: 'https://...' // Optional, override if needed
+   }));
    ```
 
 ---
@@ -96,15 +99,29 @@ A open source TypeScript SDK for Solana payments. Provides easy money requests, 
 - **recipient**: The Solana address to receive the payment. *(string, required)*
 - **amount**: Amount of SOL. *(number or string, required)*
 - **payerPublicKey**: The public key of the payer (who will sign the transaction). *(string, required)*
-- **connectionUrl**: (optional) Solana RPC endpoint. Defaults to mainnet-beta.
+- **connectionUrl:** (optional) Solana RPC endpoint. Defaults to `QUICKNODE_URL` from your environment, or mainnet-beta.
 - **Returns:** A base64-encoded unsigned transaction.
 
 ### `verifyTransaction({ reference, recipient, amount, connectionUrl? })`
 - **reference**: The unique reference for the payment. *(string, required)*
 - **recipient**: The Solana address that should have received the payment. *(string, required)*
 - **amount**: Amount of SOL. *(number or string, required)*
-- **connectionUrl**: (optional) Solana RPC endpoint. Defaults to mainnet-beta.
+- **connectionUrl:** (optional) Solana RPC endpoint. Defaults to `QUICKNODE_URL` from your environment, or mainnet-beta.
 - **Returns:** Transaction info if found, or `null` if not found.
+
+### `withRetry(fn, maxRetries?, delay?)`
+- **fn:** An async function to call (e.g., an SDK call).
+- **maxRetries:** (optional) Maximum number of retries (default: 5). Increase this if you want to allow more attempts.
+- **delay:** (optional) Initial delay in ms (default: 1000). Delay doubles on each retry.
+- **Usage:**
+  ```ts
+  // Default (5 retries):
+  const result = await withRetry(() => verifyTransaction({ ... }));
+
+  // Custom retry count (e.g., 10 retries):
+  const result = await withRetry(() => verifyTransaction({ ... }), 10);
+  ```
+  Retries on 429 errors with exponential backoff.
 
 ---
 

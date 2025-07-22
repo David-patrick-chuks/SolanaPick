@@ -1,3 +1,8 @@
+/**
+ * SolanaPick SDK transaction utilities:
+ * - Serialize unsigned Solana payment transactions for wallets
+ * - Input validation for public keys
+ */
 import {
   Connection,
   LAMPORTS_PER_SOL,
@@ -7,9 +12,15 @@ import {
 } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import { GenerateTransactionOptions } from '../types/shared';
+import { sdkConfig } from './config';
 
-const DEFAULT_CONNECTION_URL = 'https://api.mainnet-beta.solana.com';
-
+/**
+ * Validate if a string is a valid base58 Solana public key.
+ * @param {string} address - The address to validate.
+ * @returns {boolean} True if valid, false otherwise.
+ * @example
+ *   isValidBase58Address('2hQYiwpBvy2DmgCwzcs6nx7rGGzetjETEGGaRaUVh4mG'); // true
+ */
 function isValidBase58Address(address: string): boolean {
   try {
     new PublicKey(address);
@@ -22,8 +33,16 @@ function isValidBase58Address(address: string): boolean {
 /**
  * Generate a base64-encoded serialized Solana transaction for a payment.
  * The transaction is unsigned and ready for the payer's wallet to sign.
- * @param options - GenerateTransactionOptions
- * @returns Promise<string> - base64 serialized transaction
+ *
+ * @param {GenerateTransactionOptions} options - Transaction options
+ * @returns {Promise<string>} Base64-encoded unsigned transaction
+ *
+ * @throws {Error} If recipient or payerPublicKey is invalid
+ *
+ * @example
+ *   const tx = await generateSerializedTransaction({
+ *     recipient, amount, payerPublicKey
+ *   });
  */
 export async function generateSerializedTransaction(
   options: GenerateTransactionOptions,
@@ -40,7 +59,7 @@ export async function generateSerializedTransaction(
     throw new Error(`Invalid payerPublicKey: '${payerStr}' is not a valid base58 Solana public key.`);
   }
 
-  const connection = new Connection(connectionUrl || DEFAULT_CONNECTION_URL, 'confirmed');
+  const connection = new Connection(connectionUrl || sdkConfig.quicknodeUrl, 'confirmed');
   const recipientKey = typeof recipientStr === 'string' ? new PublicKey(recipientStr) : recipientStr;
   const payerKey = typeof payerStr === 'string' ? new PublicKey(payerStr) : payerStr;
   const lamports = new BigNumber(amount).times(LAMPORTS_PER_SOL).toNumber();

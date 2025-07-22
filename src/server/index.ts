@@ -1,5 +1,4 @@
 import cors from 'cors';
-import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
@@ -11,8 +10,22 @@ import { paymentRequestRouter } from './routes/paymentRequest';
 import { paymentVerifyRouter } from './routes/paymentVerify';
 import { webhookRouter } from './routes/webhook';
 
-dotenv.config();
-
+/**
+ * Solana-Pick Backend Server
+ * -------------------------
+ * Express.js application entry point for the Solana-Pick backend.
+ *
+ * - Handles API routes for payment requests, verification, and webhooks.
+ * - Serves static assets and hosted payment page.
+ * - Centralizes error handling and rate limiting.
+ *
+ * Example usage:
+ *   npm run dev
+ *   # or
+ *   npm start
+ *
+ * Best practice: All configuration should be imported from ./config.
+ */
 // ENV VARS: MONGODB_URI (MongoDB connection), RATE_LIMIT_WINDOW (ms), RATE_LIMIT_MAX (reqs)
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW || '900000'), // 15 min default
@@ -38,6 +51,11 @@ app.use(express.static(path.resolve(__dirname, '../../public')));
 
 // Serve pay.html at /pay/:reference
 app.get('/pay/:reference', (req: Request, res: Response) => {
+  res.sendFile(path.resolve(__dirname, '../../public/pay.html'));
+});
+
+// Serve pay.html at /pick
+app.get('/pick', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../../public/pay.html'));
 });
 

@@ -1,15 +1,26 @@
+/**
+ * SolanaPick SDK verification utilities:
+ * - On-chain payment verification for Solana
+ * - Input validation for references and recipients
+ */
 import {
-    Connection,
-    LAMPORTS_PER_SOL,
-    ParsedInstruction,
-    PublicKey,
-    SystemProgram,
+  Connection,
+  LAMPORTS_PER_SOL,
+  ParsedInstruction,
+  PublicKey,
+  SystemProgram,
 } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import { VerifyTransactionOptions } from '../types/shared';
+import { sdkConfig } from './config';
 
-const DEFAULT_CONNECTION_URL = 'https://api.mainnet-beta.solana.com';
-
+/**
+ * Validate if a string is a valid base58 Solana public key.
+ * @param {string} address - The address to validate.
+ * @returns {boolean} True if valid, false otherwise.
+ * @example
+ *   isValidBase58Address('2hQYiwpBvy2DmgCwzcs6nx7rGGzetjETEGGaRaUVh4mG'); // true
+ */
 function isValidBase58Address(address: string): boolean {
   try {
     new PublicKey(address);
@@ -21,8 +32,15 @@ function isValidBase58Address(address: string): boolean {
 
 /**
  * Verify if a payment transaction has been completed on-chain.
- * @param options - VerifyTransactionOptions
- * @returns Promise<{ signature: string, confirmed: boolean } | null>
+ *
+ * @param {VerifyTransactionOptions} options - Verification options
+ * @returns {Promise<{ signature: string, confirmed: boolean } | null>} Transaction info if found, or null if not found
+ *
+ * @throws {Error} If reference or recipient is invalid
+ *
+ * @example
+ *   const result = await verifyTransaction({ reference, recipient, amount });
+ *   if (result) { ... }
  */
 export async function verifyTransaction(
   options: VerifyTransactionOptions,
@@ -39,7 +57,7 @@ export async function verifyTransaction(
     throw new Error(`Invalid recipient address: '${recipientStr}' is not a valid base58 Solana public key.`);
   }
 
-  const connection = new Connection(connectionUrl || DEFAULT_CONNECTION_URL, 'confirmed');
+  const connection = new Connection(connectionUrl || sdkConfig.quicknodeUrl, 'confirmed');
   const referenceKey = typeof referenceStr === 'string' ? new PublicKey(referenceStr) : referenceStr;
   const recipientKey = typeof recipientStr === 'string' ? new PublicKey(recipientStr) : recipientStr;
   const lamports = new BigNumber(amount).times(LAMPORTS_PER_SOL).toNumber();
@@ -50,6 +68,7 @@ export async function verifyTransaction(
     const signature = sigInfo.signature;
     const transaction = await connection.getParsedTransaction(signature, {
       commitment: 'confirmed',
+      maxSupportedTransactionVersion: 0,
     });
     if (transaction && transaction.transaction.message.instructions) {
       for (const instruction of transaction.transaction.message.instructions) {

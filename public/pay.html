@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solana Pick Payment</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: #f8f9fa; }
+    .container { max-width: 400px; margin: auto; padding: 2em; border: 1px solid #eee; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    h1 { color: #4e44ce; }
+    .status { margin: 1em 0; font-size: 1.2em; }
+    button { padding: 0.7em 2em; font-size: 1em; background: #4e44ce; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    button:disabled { background: #aaa; }
+    #qrcode { margin: 2em 0; }
+  </style>
+  <!-- QRCode.js CDN (exposes global QRCode) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Solana Pick Payment</h1>
+    <div id="qrcode"></div>
+    <div id="status" class="status">⏳ Awaiting Payment...</div>
+    <button id="verifyBtn">Verify Payment</button>
+  </div>
+  <script>
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        recipient: params.get('recipient') || '',
+        amount: params.get('amount') || '',
+        reference: params.get('reference') || '',
+        label: params.get('label') || '',
+        message: params.get('message') || '',
+        memo: params.get('memo') || '',
+      };
+    }
+
+    function buildSolanaPayUrl(details) {
+      const { recipient, amount, reference, label, message, memo } = details;
+      const params = new URLSearchParams();
+      if (amount) params.append('amount', amount);
+      if (reference) params.append('reference', reference);
+      if (label) params.append('label', label);
+      if (message) params.append('message', message);
+      if (memo) params.append('memo', memo);
+      return `solana:${recipient}?${params.toString()}`;
+    }
+
+    function renderQrCode(url) {
+      const qrDiv = document.getElementById('qrcode');
+      qrDiv.innerHTML = '';
+      new QRCode(qrDiv, {
+        text: url,
+        width: 256,
+        height: 256,
+      });
+    }
+
+    async function verifyPayment() {
+      const { recipient, amount, reference } = getQueryParams();
+      if (!recipient || !amount || !reference) {
+        document.getElementById('status').textContent = '❌ Missing payment details.';
+        return;
+      }
+      document.getElementById('status').textContent = '⏳ Verifying...';
+      document.getElementById('verifyBtn').disabled = true;
+      try {
+        const url = `/api/payment/verify?recipient=${encodeURIComponent(recipient)}&amount=${encodeURIComponent(amount)}&reference=${encodeURIComponent(reference)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.status === 'verified') {
+          document.getElementById('status').textContent = '✅ Payment Verified!';
+        } else {
+          document.getElementById('status').textContent = '⏳ Awaiting Payment...';
+        }
+      } catch (err) {
+        document.getElementById('status').textContent = '❌ Error verifying payment.';
+      } finally {
+        document.getElementById('verifyBtn').disabled = false;
+      }
+    }
+
+    // Optionally, poll every 5 seconds
+    setInterval(verifyPayment, 5000);
+
+    window.onload = () => {
+      const details = getQueryParams();
+      const solanaPayUrl = buildSolanaPayUrl(details);
+      renderQrCode(solanaPayUrl);
+      document.getElementById('verifyBtn').onclick = verifyPayment;
+      verifyPayment(); // Initial check
+    };
+  </script>
+</body>
+</html>
