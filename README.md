@@ -2,7 +2,7 @@
 
 # Solana-Pick SDK & Payment Server
 
-[![npm version](https://img.shields.io/npm/v/solanapick?style=flat-square)](https://www.npmjs.com/package/solana-pick)
+[![npm version](https://img.shields.io/npm/v/solana-pick?style=flat-square)](https://www.npmjs.com/package/solana-pick)
 [![CI](https://github.com/David-patrick-chuks/SolanaPick/actions/workflows/ci.yml/badge.svg)](https://github.com/David-patrick-chuks/SolanaPick/actions)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](./LICENSE)
 
